@@ -1,0 +1,55 @@
+{% extends 'store/base.html' %}
+{% block title %}My Wishlist – VigorCart{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:36px;flex-wrap:wrap;gap:16px;">
+            <div>
+                <h1 class="section-title" style="margin:0;">My Wishlist ❤️</h1>
+                <p style="color:var(--text-muted);margin-top:6px;">{{ wishlist_products|length }} saved item{% if wishlist_products|length != 1 %}s{% endif %}</p>
+            </div>
+            <a href="{% url 'products' %}" class="btn btn-outline">← Continue Shopping</a>
+        </div>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div style="background:rgba(0,230,118,0.1);border:1px solid rgba(0,230,118,0.3);color:var(--primary);padding:12px 20px;border-radius:var(--radius-sm);margin-bottom:24px;font-weight:500;">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if wishlist_products %}
+        <div class="products-grid">
+            {% for p in wishlist_products %}
+            <div class="product-card" style="position:relative;">
+                <a href="{% url 'product_detail' p.pk %}" style="display:contents;">
+                    <div class="product-img-wrap">
+                        {% if p.image %}<img src="{{ p.image.url }}" alt="{{ p.p_name }}">
+                        {% else %}<div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;">🏋️</div>{% endif %}
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">{{ p.category }}</div>
+                        <div class="product-name">{{ p.p_name }}</div>
+                        <div class="product-rating"><span class="stars">★★★★★</span> (4.8)</div>
+                        <div class="product-price" style="margin-bottom:12px;">&#8377;{{ p.price }}</div>
+                    </div>
+                </a>
+                <div style="padding:0 16px 16px;display:flex;gap:8px;">
+                    <a href="{% url 'add_to_cart' p.id %}" class="btn btn-primary btn-sm" style="flex:1;justify-content:center;">🛒 Add to Cart</a>
+                    <a href="{% url 'remove_from_wishlist' p.id %}" class="btn btn-outline btn-sm" title="Remove from wishlist" style="color:#ff4d4d;border-color:rgba(255,77,77,0.3);">✕</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="text-align:center;padding:80px;color:var(--text-muted);background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);">
+            <div style="font-size:5rem;margin-bottom:16px;">❤️</div>
+            <h2 style="margin-bottom:8px;">Your wishlist is empty</h2>
+            <p style="margin-bottom:24px;">Save items you love by clicking the heart icon on any product.</p>
+            <a href="{% url 'products' %}" class="btn btn-primary">Browse Products →</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

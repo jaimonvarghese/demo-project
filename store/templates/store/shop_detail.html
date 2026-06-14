@@ -1,0 +1,70 @@
+{% extends 'store/base.html' %}
+{% block title %}{{ shop.name }} – VigorCart{% endblock %}
+{% block content %}
+<section class="section" style="padding-top: 40px;">
+    <div class="container">
+        <!-- Shop Header -->
+        <div
+            style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 48px; margin-bottom: 48px; display: flex; align-items: center; gap: 32px; flex-wrap: wrap;">
+            <div
+                style="width: 100px; height: 100px; background: var(--primary); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; font-weight: 800;">
+                {{ shop.name|first }}
+            </div>
+            <div style="flex: 1; min-width: 300px;">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                    <h1 style="font-size: 2.2rem; font-weight: 800; margin: 0;">{{ shop.name }}</h1>
+                    {% if shop.is_verified %}
+                    <span title="Verified Shop" style="color: var(--primary); font-size: 1.2rem;">✔</span>
+                    {% endif %}
+                </div>
+                <p style="color: var(--text-secondary); margin-bottom: 16px; font-size: 1.1rem;">{{ shop.description }}
+                </p>
+                <div style="display: flex; gap: 24px; color: var(--text-muted); font-size: 0.9rem;">
+                    <span>📍 {{ shop.owner.username }}'s Store</span>
+                    <span>📦 {{ products|length }} Products</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-header" style="text-align: left; margin-bottom: 32px;">
+            <h2 class="section-title">Products from {{ shop.name }}</h2>
+        </div>
+
+        {% if products %}
+        <div class="products-grid">
+            {% for product in products %}
+            <a href="{% url 'product_detail' product.pk %}" class="product-card">
+                <div class="product-img-wrap">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.p_name }}">
+                    {% else %}
+                    <div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;">🏋️
+                    </div>
+                    {% endif %}
+                    <div class="product-wishlist">❤️</div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">{{ product.category }}</div>
+                    <div class="product-name" style="margin-bottom:2px;">{{ product.p_name }}</div>
+                    {% if product.asset_id %}
+                    <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px;">ID: {{ product.asset_id }}
+                    </div>
+                    {% endif %}
+                    <div class="product-rating"><span class="stars">★★★★★</span> (4.8)</div>
+                    <div class="product-footer">
+                        <div class="product-price">₹{{ product.price }}</div>
+                        <span class="btn btn-primary btn-sm">View Detail</span>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="text-align:center;padding:80px;color:var(--text-muted);">
+            <h2>No products yet</h2>
+            <p>This shop hasn't listed any products yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

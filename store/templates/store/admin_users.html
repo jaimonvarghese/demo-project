@@ -1,0 +1,99 @@
+{% extends 'store/base.html' %}
+{% block title %}User Management – VigorCart{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;flex-wrap:wrap;gap:16px;">
+            <div>
+                <span style="font-size:0.85rem;color:var(--primary);font-weight:700;text-transform:uppercase;letter-spacing:0.12em;">⚙️ Admin Panel</span>
+                <h1 style="font-size:2rem;font-weight:800;margin-top:4px;">User Management 👤</h1>
+            </div>
+            <a href="{% url 'admin_dashboard' %}" class="btn btn-outline">← Back to Dashboard</a>
+        </div>
+
+        {% if users %}
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-card);">
+            <div style="overflow-x:auto;">
+                <table style="width:100%;border-collapse:collapse;font-size:0.9rem;text-align:left;">
+                    <thead>
+                        <tr style="background:var(--bg-elevated);color:var(--text-primary);">
+                            <th style="padding:16px 20px;font-weight:700;">Username</th>
+                            <th style="padding:16px 20px;font-weight:700;">Email</th>
+                            <th style="padding:16px 20px;font-weight:700;text-align:center;">Role</th>
+                            <th style="padding:16px 20px;font-weight:700;">Phone</th>
+                            <th style="padding:16px 20px;font-weight:700;">Address</th>
+                            <th style="padding:16px 20px;font-weight:700;text-align:right;">Date Joined</th>
+                            <th style="padding:16px 20px;font-weight:700;text-align:right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in users %}
+                        <tr style="border-top:1px solid var(--border);transition:background var(--transition);" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+                            <td style="padding:16px 20px;font-weight:600;color:var(--text-primary);">
+                                {{ u.username }}
+                                {% if u.is_staff or u.is_superuser %}
+                                <span style="font-size:0.75rem;margin-left:4px;" title="Staff Member">🔑</span>
+                                {% endif %}
+                            </td>
+                            <td style="padding:16px 20px;color:var(--text-secondary);">
+                                <a href="mailto:{{ u.email }}" style="color:var(--primary);text-decoration:underline;">{{ u.email }}</a>
+                            </td>
+                            <td style="padding:16px 20px;text-align:center;">
+                                <span style="
+                                    padding:4px 12px;
+                                    border-radius:50px;
+                                    font-size:0.75rem;
+                                    font-weight:700;
+                                    text-transform:uppercase;
+                                    letter-spacing:0.02em;
+                                    {% if u.role == 'admin' or u.is_staff %}
+                                        background:rgba(255,77,77,0.1); color:var(--danger);
+                                    {% elif u.role == 'shop_owner' %}
+                                        background:rgba(0,230,118,0.1); color:var(--primary);
+                                    {% else %}
+                                        background:rgba(255,171,64,0.1); color:#ffab40;
+                                    {% endif %}
+                                ">
+                                    {% if u.is_staff or u.role == 'admin' %}
+                                        Admin
+                                    {% elif u.role == 'shop_owner' %}
+                                        Shop Owner
+                                    {% else %}
+                                        Customer
+                                    {% endif %}
+                                </span>
+                            </td>
+                            <td style="padding:16px 20px;color:var(--text-secondary);">
+                                {% if u.phone_number %}{{ u.phone_number }}{% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
+                            </td>
+                            <td style="padding:16px 20px;color:var(--text-secondary);" title="{{ u.address }}">
+                                {% if u.address %}{{ u.address|truncatechars:30 }}{% else %}<span style="color:var(--text-muted);">—</span>{% endif %}
+                            </td>
+                            <td style="padding:16px 20px;text-align:right;color:var(--text-muted);font-size:0.82rem;">
+                                {{ u.date_joined|date:"d M Y" }}
+                            </td>
+                            <td style="padding:16px 20px;text-align:right;">
+                                {% if u != request.user %}
+                                <form method="POST" action="{% url 'delete_user' u.id %}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete user {{ u.username }}? This action is permanent and will cascade-delete all of their shops, products, cart items, orders, wishlist entries, and reviews.')">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm" style="background:rgba(255,77,77,0.1); color:var(--danger); border:1px solid rgba(255,77,77,0.3); padding:4px 12px; border-radius:50px;">Delete</button>
+                                </form>
+                                {% else %}
+                                <span style="font-size:0.82rem;color:var(--text-muted);font-style:italic;">You</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+        <div style="text-align:center;padding:80px;color:var(--text-muted);background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);">
+            <div style="font-size:4rem;margin-bottom:16px;">👥</div>
+            <h2>No users found</h2>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

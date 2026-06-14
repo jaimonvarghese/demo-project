@@ -1,0 +1,232 @@
+{
+    "Equipment": [
+        {
+            "id": 1,
+            "name": "Adjustable Dumbbells",
+            "price": 8500.0,
+            "stock": 10,
+            "size": "",
+            "description": "High quality 24kg adjustable dumbbells.",
+            "asset_id": null,
+            "shop": "Premium Fitness Hub"
+        },
+        {
+            "id": 4,
+            "name": "Yoga Mat Pro",
+            "price": 1800.0,
+            "stock": 15,
+            "size": "",
+            "description": "Non-slip 6mm eco-friendly yoga mat.",
+            "asset_id": null,
+            "shop": "Premium Fitness Hub"
+        },
+        {
+            "id": 6,
+            "name": "Power Rack - Elite",
+            "price": 45000.0,
+            "stock": 5,
+            "size": "",
+            "description": "Heavy duty power rack for home gyms.",
+            "asset_id": null,
+            "shop": "Iron Master Equipment"
+        },
+        {
+            "id": 7,
+            "name": "Olympic Barbell 20kg",
+            "price": 12000.0,
+            "stock": 15,
+            "size": "",
+            "description": "Hard chrome finish, 7ft long.",
+            "asset_id": null,
+            "shop": "Iron Master Equipment"
+        },
+        {
+            "id": 8,
+            "name": "Hex Dumbbells (Pair 10kg)",
+            "price": 3500.0,
+            "stock": 20,
+            "size": "",
+            "description": "Rubber encased hex dumbbells.",
+            "asset_id": null,
+            "shop": "Iron Master Equipment"
+        },
+        {
+            "id": 9,
+            "name": "Incline Bench",
+            "price": 8500.0,
+            "stock": 10,
+            "size": "",
+            "description": "Adjustable bench with high density foam.",
+            "asset_id": null,
+            "shop": "Iron Master Equipment"
+        }
+    ],
+    "Supplements": [
+        {
+            "id": 2,
+            "name": "Whey Protein Isolate",
+            "price": 4500.0,
+            "stock": 25,
+            "size": "",
+            "description": "2kg pure whey protein isolate.",
+            "asset_id": null,
+            "shop": "Premium Fitness Hub"
+        },
+        {
+            "id": 5,
+            "name": "BCAA 3000g",
+            "price": 2200.0,
+            "stock": 30,
+            "size": "",
+            "description": "Intra-workout recovery supplement.",
+            "asset_id": null,
+            "shop": "Premium Fitness Hub"
+        },
+        {
+            "id": 10,
+            "name": "Whey Gold Standard 5lb",
+            "price": 6500.0,
+            "stock": 40,
+            "size": "",
+            "description": "Double rich chocolate whey protein.",
+            "asset_id": null,
+            "shop": "Nutrition Pro"
+        },
+        {
+            "id": 11,
+            "name": "Pre-Workout Blast",
+            "price": 2800.0,
+            "stock": 25,
+            "size": "",
+            "description": "30 servings of high energy formula.",
+            "asset_id": null,
+            "shop": "Nutrition Pro"
+        },
+        {
+            "id": 12,
+            "name": "Creatine Monohydrate 250g",
+            "price": 1200.0,
+            "stock": 60,
+            "size": "",
+            "description": "Pure micronized creatine.",
+            "asset_id": null,
+            "shop": "Nutrition Pro"
+        },
+        {
+            "id": 13,
+            "name": "Multi-Vitamin Complex",
+            "price": 950.0,
+            "stock": 99,
+            "size": "",
+            "description": "60 tablets essential nutrients.",
+            "asset_id": null,
+            "shop": "Nutrition Pro"
+        }
+    ],
+    "Activewear": [
+        {
+            "id": 3,
+            "name": "Compression T-Shirt",
+            "price": 1200.0,
+            "stock": 50,
+            "size": "",
+            "description": "Breathable dry-fit compression wear.",
+            "asset_id": null,
+            "shop": "Premium Fitness Hub"
+        },
+        {
+            "id": 17,
+            "name": "Dri-Fit Training Tee",
+            "price": 1100.0,
+            "stock": 49,
+            "size": "",
+            "description": "Moisture wicking fabric, slim fit.",
+            "asset_id": null,
+            "shop": "Sole Runner Hub"
+        },
+        {
+            "id": 18,
+            "name": "High-Waist Leggings",
+            "price": 1800.0,
+            "stock": 40,
+            "size": "",
+            "description": "Squat proof, compression fit.",
+            "asset_id": null,
+            "shop": "Sole Runner Hub"
+        },
+        {
+            "id": 19,
+            "name": "Zip-Up Hoodie",
+            "price": 2400.0,
+            "stock": 30,
+            "size": "",
+            "description": "Comfortable warm-up jacket.",
+            "asset_id": null,
+            "shop": "Iron Master Equipment"
+        }
+    ],
+    "Footwear": [
+        {
+            "id": 14,
+            "name": "Road Running Shoes V1",
+            "price": 5500.0,
+            "stock": 30,
+            "size": "",
+            "description": "Lightweight and responsive padding.",
+            "asset_id": null,
+            "shop": "Sole Runner Hub"
+        },
+        {
+            "id": 15,
+            "name": "Gym Training Shoes",
+            "price": 4200.0,
+            "stock": 25,
+            "size": "",
+            "description": "Stable base for heavy lifting.",
+            "asset_id": null,
+            "shop": "Sole Runner Hub"
+        },
+        {
+            "id": 16,
+            "name": "Trail Blazers",
+            "price": 6200.0,
+            "stock": 15,
+            "size": "",
+            "description": "Rugged grip for outdoor running.",
+            "asset_id": null,
+            "shop": "Sole Runner Hub"
+        }
+    ],
+    "Accessories": [
+        {
+            "id": 20,
+            "name": "Protein Shaker 700ml",
+            "price": 450.0,
+            "stock": 199,
+            "size": "",
+            "description": "Leak proof with mixing ball.",
+            "asset_id": null,
+            "shop": "Nutrition Pro"
+        },
+        {
+            "id": 21,
+            "name": "Lifting Straps (Pair)",
+            "price": 650.0,
+            "stock": 97,
+            "size": "",
+            "description": "Heavy duty cotton with padding.",
+            "asset_id": null,
+            "shop": "Iron Master Equipment"
+        },
+        {
+            "id": 22,
+            "name": "Gym Gym Bag 40L",
+            "price": 1800.0,
+            "stock": 35,
+            "size": "",
+            "description": "Separate shoe compartment.",
+            "asset_id": null,
+            "shop": "Sole Runner Hub"
+        }
+    ]
+}

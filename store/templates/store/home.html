@@ -1,0 +1,265 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}VigorCart – Premium Fitness & Health Equipment{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid-overlay"></div>
+    <div class="hero-content">
+        <div class="hero-text">
+            <div class="hero-badge">⚡ New Arrivals Just Dropped</div>
+            <h1 class="hero-title">
+                Level Up Your<br>
+                <span class="highlight">Fitness Game</span>
+            </h1>
+            <p class="hero-subtitle">
+                Discover premium health &amp; fitness equipment from top brands. Find everything you need to build your
+                dream home gym.
+            </p>
+            <div class="hero-cta">
+                <a href="{% url 'products' %}" class="btn btn-primary btn-lg">Shop Now →</a>
+                <a href="{% url 'bmi' %}" class="btn btn-outline btn-lg">BMI Calculator</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Products</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Stores</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">10k+</div>
+                    <div class="stat-label">Customers</div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="hero-card-stack">
+                <div class="floating-card">
+                    <div class="card-label">Top Seller</div>
+                    <div class="card-value">Pro Dumbbells</div>
+                    <div class="card-sub">⭐ 4.9 · ₹4,999</div>
+                </div>
+                <div class="floating-card">
+                    <div class="card-label">Just In</div>
+                    <div class="card-value">Yoga Mat Pro</div>
+                    <div class="card-sub">⭐ 4.7 · ₹1,299</div>
+                </div>
+                <div class="floating-card">
+                    <div class="card-label">Deal of Day</div>
+                    <div class="card-value">Resistance Bands</div>
+                    <div class="card-sub">⚡ 30% OFF · ₹799</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" style="padding-top: 48px;">
+    <div class="container">
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🚚</div>
+                <div>
+                    <div class="feature-title">Free Delivery</div>
+                    <div class="feature-desc">On orders above ₹999. Fast &amp; reliable delivery.</div>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <div>
+                    <div class="feature-title">Secure Payments</div>
+                    <div class="feature-desc">100% secure checkout with multiple payment options.</div>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <div>
+                    <div class="feature-title">Easy Returns</div>
+                    <div class="feature-desc">7-day hassle-free return &amp; exchange policy.</div>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📍</div>
+                <div>
+                    <div class="feature-title">GPS Store Locator</div>
+                    <div class="feature-desc">Find the nearest store with live GPS navigation.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">Browse by Category</div>
+            <h2 class="section-title">Shop by Category</h2>
+            <p class="section-subtitle">Find exactly what you need from our wide range of product categories.</p>
+        </div>
+        <div class="categories-grid">
+            {% if categories %}
+            {% for cat in categories %}
+            <a href="{% url 'products' %}?category={{ cat.id }}" class="category-card">
+                <div class="category-icon">
+                    {% if cat.name == 'Equipment' %}&#127947;&#65039;
+                    {% elif cat.name == 'Supplements' %}&#128138;
+                    {% elif cat.name == 'Activewear' %}&#128085;
+                    {% elif cat.name == 'Footwear' %}&#128095;
+                    {% elif cat.name == 'Accessories' %}&#127890;
+                    {% else %}&#127947;&#65039;{% endif %}
+                </div>
+                <div class="category-name">{{ cat.name }}</div>
+                <div class="category-count">{{ cat.products.count }} items</div>
+            </a>
+            {% endfor %}
+            {% else %}
+            <div class="category-card">
+                <div class="category-icon">🏋️</div>
+                <div class="category-name">Gym Equipment</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">🧘</div>
+                <div class="category-name">Yoga & Pilates</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">👟</div>
+                <div class="category-name">Footwear</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">💊</div>
+                <div class="category-name">Supplements</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">🚴</div>
+                <div class="category-name">Cardio Machines</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">🥊</div>
+                <div class="category-name">Combat Sports</div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- FEATURED PRODUCTS -->
+<section class="section"
+    style="background: var(--bg-card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">Featured</div>
+            <h2 class="section-title">Popular Products</h2>
+            <p class="section-subtitle">Hand-picked top sellers from our best shops.</p>
+        </div>
+        <div class="products-grid">
+            {% if featured_products %}
+            {% for product in featured_products %}
+            <div class="product-card" style="display:flex;flex-direction:column;position:relative;">
+                <div class="product-badge" style="position:absolute; top:12px; left:12px; z-index:10; background:var(--primary); color:#000; padding:4px 10px; border-radius:4px; font-size:0.75rem; font-weight:700;">Popular</div>
+                <div class="product-wishlist" style="position:absolute; top:12px; right:12px; z-index:10; background:{% if product.id in wishlist_product_ids %}var(--primary){% else %}var(--bg-card){% endif %}; padding:8px; border-radius:50%; box-shadow:0 2px 8px rgba(0,0,0,0.1); width:40px; height:40px; display:flex; align-items:center; justify-content:center; transition:0.2s;">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'add_to_wishlist' product.id %}" style="font-size:1.2rem; text-decoration:none; line-height:1;" title="{% if product.id in wishlist_product_ids %}Remove from wishlist{% else %}Add to wishlist{% endif %}">❤️</a>
+                    {% else %}
+                    <a href="{% url 'login' %}" style="font-size:1.2rem; text-decoration:none; line-height:1;" title="Login to wishlist">🤍</a>
+                    {% endif %}
+                </div>
+                <a href="{% url 'product_detail' product.id %}" style="display:contents;text-decoration:none;color:inherit;">
+                    <div class="product-img-wrap">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.p_name }}">
+                        {% else %}
+                        <div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;">🏋️</div>
+                        {% endif %}
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">{{ product.category }}</div>
+                        <div class="product-name">{{ product.p_name }}</div>
+                        <div class="product-rating"><span class="stars">★★★★★</span> (4.8)</div>
+                        <div class="product-footer">
+                            <div class="product-price">₹{{ product.price }}</div>
+                        </div>
+                    </div>
+                </a>
+                <div style="padding:0 16px 16px;margin-top:auto;">
+                    <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;">🛒 Add to Cart</a>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <!-- Placeholder cards when no products exist -->
+            {% for i in "123456" %}
+            <div class="product-card">
+                <div class="product-img-wrap">
+                    <div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;">🏋️
+                    </div>
+                    <div class="product-badge">New</div>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">Equipment</div>
+                    <div class="product-name">Sample Product {{ forloop.counter }}</div>
+                    <div class="product-rating"><span class="stars">★★★★☆</span> (4.2)</div>
+                    <div class="product-footer">
+                        <div class="product-price"><span class="old-price">₹2,999</span>₹1,999</div>
+                        <a href="{% url 'login' %}" class="btn btn-primary btn-sm">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+        <!-- FEATURED SHOPS -->
+        <section id="stores" class="section" style="border-bottom: 1px solid var(--border);">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-tag">Partners</div>
+                    <h2 class="section-title">Shop by Store</h2>
+                    <p class="section-subtitle">Support our verified local and specialty fitness vendors.</p>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;">
+                    {% for shop in shops %}
+                    <a href="{% url 'shop_detail' shop.pk %}"
+                        style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; text-align: center; transition: all var(--transition); text-decoration: none; color: inherit;">
+                        <div
+                            style="width: 80px; height: 80px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 20px; color: var(--primary);">
+                            {{ shop.name|first }}
+                        </div>
+                        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 8px;">{{ shop.name }}</h3>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 0;">
+                            {{ shop.description|truncatechars:80 }}</p>
+                        <div
+                            style="margin-top: 16px; font-size: 0.8rem; color: var(--primary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                            Visit Store →</div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <!-- BMI CTA BANNER -->
+        <section class="section">
+            <div class="container">
+                <div style="background: linear-gradient(135deg, rgba(0,230,118,0.12) 0%, rgba(0,200,83,0.05) 100%);
+                border: 1px solid rgba(0,230,118,0.3);
+                border-radius: var(--radius);
+                padding: 60px 48px;
+                text-align: center;">
+                    <div class="section-tag">Free Tool</div>
+                    <h2 class="section-title">Check Your BMI</h2>
+                    <p class="section-subtitle">Use our free BMI calculator to know your health status and shop products
+                        tailored to your fitness goals.</p>
+                    <br>
+                    <a href="{% url 'bmi' %}" class="btn btn-primary btn-lg">Calculate BMI →</a>
+                </div>
+            </div>
+        </section>
+
+        {% endblock %}

@@ -1,0 +1,115 @@
+{% extends 'store/base.html' %}
+{% block title %}Shop Orders – VigorCart{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;flex-wrap:wrap;gap:16px;">
+            <div>
+                <span style="font-size:0.85rem;color:var(--primary);font-weight:700;text-transform:uppercase;letter-spacing:0.12em;">🏪 {{ shop.name }}</span>
+                <h1 style="font-size:2rem;font-weight:800;margin-top:4px;">Manage Orders 📋</h1>
+            </div>
+            <a href="{% url 'shop_dashboard' %}" class="btn btn-outline">← Back to Dashboard</a>
+        </div>
+
+        <!-- Status Tabs -->
+        <div style="display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap;">
+            {% for label, key in status_tabs %}
+            <a href="?status={{ key }}" class="btn btn-sm {% if status_filter == key %}btn-primary{% else %}btn-outline{% endif %}">
+                {{ label }}
+            </a>
+            {% endfor %}
+        </div>
+
+        {% if orders %}
+        <div style="display:flex;flex-direction:column;gap:20px;">
+            {% for order in orders %}
+            <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow-card);">
+                <!-- Order Header -->
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:16px;">
+                    <div>
+                        <div style="font-weight:800;font-size:1.15rem;color:var(--text-primary);">Order #{{ order.o_id }}</div>
+                        <div style="color:var(--text-secondary);font-size:0.85rem;margin-top:4px;display:flex;flex-wrap:wrap;gap:12px 20px;">
+                            <span>📅 {{ order.created_at|date:"d M Y, h:i A" }}</span>
+                            <span>👤 Customer: <a href="mailto:{{ order.email }}" style="color:var(--primary);text-decoration:underline;">{{ order.email }}</a></span>
+                            <span>📍 Address: {{ order.delivery_address }}</span>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+                        <div style="text-align:right;">
+                            <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">Shop Revenue</div>
+                            <div style="font-size:1.25rem;font-weight:800;color:var(--primary);">₹{{ order.shop_revenue }}</div>
+                        </div>
+                        <div>
+                            <form method="POST" action="{% url 'update_order_status' order.o_id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <select name="status" onchange="this.form.submit()" style="
+                                    padding:8px 16px;
+                                    border-radius:50px;
+                                    font-family:var(--font);
+                                    font-size:0.82rem;
+                                    font-weight:700;
+                                    cursor:pointer;
+                                    outline:none;
+                                    border:1px solid rgba(255,255,255,0.1);
+                                    background:{% if order.delivery_status == 'Completed' %}rgba(0,230,118,0.1){% elif order.delivery_status == 'Cancelled' %}rgba(255,77,77,0.1){% else %}rgba(255,171,64,0.1){% endif %};
+                                    color:{% if order.delivery_status == 'Completed' %}var(--primary){% elif order.delivery_status == 'Cancelled' %}var(--danger){% else %}#ffab40{% endif %};
+                                ">
+                                    <option value="Pending" {% if order.delivery_status == 'Pending' %}selected{% endif %} style="background:var(--bg-card); color:#ffab40;">⏳ Pending</option>
+                                    <option value="Completed" {% if order.delivery_status == 'Completed' %}selected{% endif %} style="background:var(--bg-card); color:var(--primary);">✅ Completed</option>
+                                    <option value="Cancelled" {% if order.delivery_status == 'Cancelled' %}selected{% endif %} style="background:var(--bg-card); color:var(--danger);">✕ Cancelled</option>
+                                </select>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products Table -->
+                <div style="overflow-x:auto;">
+                    <table style="width:100%;border-collapse:collapse;font-size:0.9rem;text-align:left;">
+                        <thead>
+                            <tr style="color:var(--text-secondary);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.05em;">
+                                <th style="padding:8px 12px;font-weight:600;">Product</th>
+                                <th style="padding:8px 12px;font-weight:600;text-align:center;">Quantity</th>
+                                <th style="padding:8px 12px;font-weight:600;text-align:right;">Price</th>
+                                <th style="padding:8px 12px;font-weight:600;text-align:right;">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order.shop_items %}
+                            <tr style="border-top:1px solid rgba(255,255,255,0.05);">
+                                <td style="padding:12px;">
+                                    <div style="display:flex;align-items:center;gap:12px;">
+                                        {% if item.product.image %}
+                                        <img src="{{ item.product.image.url }}" style="width:40px;height:40px;object-fit:cover;border-radius:6px;border:1px solid var(--border);">
+                                        {% else %}
+                                        <div style="width:40px;height:40px;background:var(--bg-elevated);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🏋️</div>
+                                        {% endif %}
+                                        <div>
+                                            <div style="font-weight:600;color:var(--text-primary);">{{ item.product.p_name }}</div>
+                                            {% if item.product.size %}
+                                            <div style="font-size:0.75rem;color:var(--text-muted);">Size: {{ item.product.size }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="padding:12px;text-align:center;color:var(--text-primary);">{{ item.quantity }}</td>
+                                <td style="padding:12px;text-align:right;color:var(--text-secondary);">₹{{ item.price }}</td>
+                                <td style="padding:12px;text-align:right;font-weight:600;color:var(--text-primary);">₹{% widthratio item.price 1 item.quantity %}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="text-align:center;padding:80px;color:var(--text-muted);background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);">
+            <div style="font-size:4rem;margin-bottom:16px;">📋</div>
+            <h2>No orders found</h2>
+            <p>{% if status_filter != 'all' %}No {{ status_filter }} orders at the moment.{% else %}Once customers purchase products from your shop, they will show up here.{% endif %}</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

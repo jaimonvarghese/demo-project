@@ -1,0 +1,55 @@
+{% extends 'store/base.html' %}
+{% block title %}Review – {{ product.p_name }} | VigorCart{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="container" style="max-width:600px;">
+        <a href="{% url 'product_detail' product.pk %}" class="btn btn-outline btn-sm" style="margin-bottom:24px;">← Back to Product</a>
+        <h1 class="section-title" style="margin-bottom:8px;">⭐ Write a Review</h1>
+        <p style="color:var(--text-muted);margin-bottom:32px;">for <strong>{{ product.p_name }}</strong></p>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div style="background:rgba(0,230,118,0.1);border:1px solid rgba(0,230,118,0.3);color:var(--primary);padding:12px 20px;border-radius:var(--radius-sm);margin-bottom:20px;">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if not user.is_authenticated %}
+        <div style="text-align:center;padding:40px;background:var(--bg-card);border-radius:var(--radius);">
+            <p>Please <a href="{% url 'login' %}" style="color:var(--primary);">log in</a> to write a review.</p>
+        </div>
+        {% elif not has_bought %}
+        <div style="text-align:center;padding:40px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);">
+            <div style="font-size:3rem;margin-bottom:12px;">🛒</div>
+            <h3>Purchase Required</h3>
+            <p style="color:var(--text-muted);">You can only review products you have purchased.</p>
+        </div>
+        {% else %}
+        <div class="auth-card" style="max-width:100%;">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="form-label">Your Rating</label>
+                    <div style="display:flex;gap:12px;margin-bottom:4px;flex-wrap:wrap;">
+                        {% for i in "12345" %}
+                        <label style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;">
+                            <input type="radio" name="rating" value="{{ i }}" {% if existing_review and existing_review.rating == i|add:0 %}checked{% elif i == '5' and not existing_review %}checked{% endif %} style="accent-color:var(--primary);">
+                            <span style="font-size:1.4rem;">{{ i }}★</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Your Comment</label>
+                    <textarea name="comment" class="form-input" rows="4" placeholder="Share your experience with this product…">{% if existing_review %}{{ existing_review.comment }}{% endif %}</textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
+                    {% if existing_review %}Update Review{% else %}Submit Review{% endif %}
+                </button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

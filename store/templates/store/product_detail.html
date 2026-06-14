@@ -1,0 +1,138 @@
+{% extends 'store/base.html' %}
+{% block title %}{{ product.p_name }} - VigorCart{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;">
+            <div>
+                <div
+                    style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;height:400px;display:flex;align-items:center;justify-content:center;">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.p_name }}"
+                        style="width:100%;height:100%;object-fit:cover;">
+                    {% else %}
+                    <div style="font-size:6rem;">&#127947;&#65039;</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div>
+                <div
+                    style="font-size:0.8rem;color:var(--primary);font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;">
+                    {{ product.category }}
+                    {% if product.asset_id %} | ID: {{ product.asset_id }}{% endif %}
+                </div>
+                <h1 style="font-size:2rem;font-weight:800;margin-bottom:12px;">{{ product.p_name }}</h1>
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+                    <span style="color:#ffab40;font-size:1.1rem;">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                    <span style="color:var(--text-muted);font-size:0.85rem;">(4.8 rating)</span>
+                </div>
+                <div style="font-size:2rem;font-weight:800;color:var(--primary);margin-bottom:24px;">&#8377;{{ product.price }}</div>
+                <div style="color:var(--text-secondary);margin-bottom:24px;line-height:1.7;">{{ product.description }}
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:28px;">
+                    <div
+                        style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:10px 18px;font-size:0.85rem;">
+                        <span style="color:var(--text-muted);">Size:</span> <strong>{{ product.size }}</strong>
+                    </div>
+                    <div
+                        style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:10px 18px;font-size:0.85rem;">
+                        <span style="color:var(--text-muted);">Stock:</span>
+                        <strong style="color:var(--primary);">{{ product.stock_availability }}</strong>
+                    </div>
+                </div>
+                <div style="display:flex;gap:14px;flex-wrap:wrap;">
+                    <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary btn-lg">&#128722; Add to Cart</a>
+                    {% if user.is_authenticated %}
+                        {% if in_wishlist %}
+                        <a href="{% url 'add_to_wishlist' product.id %}" class="btn btn-outline btn-lg" style="background:var(--primary);color:#000;border-color:var(--primary);">❤️ In Wishlist</a>
+                        {% else %}
+                        <a href="{% url 'add_to_wishlist' product.id %}" class="btn btn-outline btn-lg">🤍 Add to Wishlist</a>
+                        {% endif %}
+                    {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-outline btn-lg">🤍 Add to Wishlist</a>
+                    {% endif %}
+                </div>
+                <div
+                    style="margin-top:28px;border-top:1px solid var(--border);padding-top:20px;color:var(--text-secondary);font-size:0.88rem;">
+                    <p>{{ product.detail }}</p>
+                    {% if product.shop %}<p style="margin-top:8px;">Sold by: <strong>{{ product.shop.name }}</strong>
+                    </p>{% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% if related %}
+        <div style="margin-top:80px;">
+            <h2 style="font-size:1.6rem;font-weight:800;margin-bottom:28px;">Related Products</h2>
+            <div class="products-grid">
+                {% for p in related %}
+                <div class="product-card" style="display:flex;flex-direction:column;">
+                    <a href="{% url 'product_detail' p.pk %}" style="display:contents;text-decoration:none;color:inherit;">
+                        <div class="product-img-wrap">
+                            {% if p.image %}<img src="{{ p.image.url }}" alt="{{ p.p_name }}">
+                            {% else %}<div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:3.5rem;">🏋️</div>{% endif %}
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">{{ p.p_name }}</div>
+                            <div class="product-footer">
+                                <div class="product-price">₹{{ p.price }}</div>
+                            </div>
+                        </div>
+                    </a>
+                    <div style="padding:0 16px 16px;margin-top:auto;">
+                        <a href="{% url 'add_to_cart' p.id %}" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;">🛒 Add to Cart</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Reviews Section -->
+        <div style="margin-top:80px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;">
+                <div>
+                    <h2 style="font-size:1.6rem;font-weight:800;margin:0;">Customer Reviews</h2>
+                    {% if avg_rating %}
+                    <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+                        <span style="color:#ffab40;font-size:1.3rem;">{% for i in "12345" %}{% if i|add:0 <= avg_rating|floatformat:0|add:0 %}★{% else %}☆{% endif %}{% endfor %}</span>
+                        <span style="font-weight:700;">{{ avg_rating|floatformat:1 }}/5</span>
+                        <span style="color:var(--text-muted);font-size:0.85rem;">({{ reviews.count }} review{{ reviews.count|pluralize }})</span>
+                    </div>
+                    {% endif %}
+                </div>
+                {% if has_bought %}
+                <a href="{% url 'review_product' product.pk %}" class="btn btn-primary btn-sm">
+                    {% if user_review %}✏️ Update Review{% else %}⭐ Write a Review{% endif %}
+                </a>
+                {% endif %}
+            </div>
+
+            {% if reviews %}
+            <div style="display:flex;flex-direction:column;gap:16px;">
+                {% for review in reviews %}
+                <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;">
+                    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+                        <div style="width:40px;height:40px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:700;color:#000;flex-shrink:0;">
+                            {{ review.user.username|first|upper }}
+                        </div>
+                        <div>
+                            <div style="font-weight:600;">{{ review.user.username }}</div>
+                            <div style="color:#ffab40;">{% for i in "12345" %}{% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}{% endfor %}</div>
+                        </div>
+                        <div style="margin-left:auto;color:var(--text-muted);font-size:0.8rem;">{{ review.created_at|date:"d M Y" }}</div>
+                    </div>
+                    {% if review.comment %}<p style="color:var(--text-secondary);line-height:1.6;margin:0;">{{ review.comment }}</p>{% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div style="text-align:center;padding:40px;color:var(--text-muted);background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);">
+                <div style="font-size:2rem;margin-bottom:8px;">⭐</div>
+                <p>No reviews yet. {% if has_bought %}Be the first to review this product!{% endif %}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

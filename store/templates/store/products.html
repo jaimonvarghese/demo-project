@@ -1,0 +1,72 @@
+{% extends 'store/base.html' %}
+{% block title %}Products - VigorCart{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="section-header" style="text-align:left;margin-bottom:32px;">
+            <h1 class="section-title">All Products</h1>
+        </div>
+        <form method="get" style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:40px;align-items:center;">
+            <input type="text" name="q" value="{{ search_q }}" placeholder="Search products..." class="form-input"
+                style="width:260px;border-radius:50px;">
+            <select name="category" class="form-input" style="width:180px;border-radius:50px;">
+                <option value="">All Categories</option>
+                {% for cat in categories %}
+                <option value="{{ cat.id }}" {% if current_category == cat.id %}selected{% endif %}>{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+            <select name="sort" class="form-input" style="width:200px;border-radius:50px;">
+                <option value="default" {% if current_sort == 'default' %}selected{% endif %}>Default</option>
+                <option value="price_asc" {% if current_sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                <option value="price_desc" {% if current_sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
+
+        {% if products %}
+        <div class="products-grid">
+            {% for product in products %}
+            <div class="product-card" style="display:flex;flex-direction:column;position:relative;">
+                <div class="product-wishlist" style="position:absolute; top:12px; right:12px; z-index:10; background:{% if product.id in wishlist_product_ids %}var(--primary){% else %}var(--bg-card){% endif %}; padding:8px; border-radius:50%; box-shadow:0 2px 8px rgba(0,0,0,0.1); width:40px; height:40px; display:flex; align-items:center; justify-content:center; transition:0.2s;">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'add_to_wishlist' product.id %}" title="{% if product.id in wishlist_product_ids %}Remove from wishlist{% else %}Add to wishlist{% endif %}" style="font-size:1.2rem; text-decoration:none; line-height:1;">❤️</a>
+                    {% else %}
+                    <a href="{% url 'login' %}" title="Login to wishlist" style="font-size:1.2rem; text-decoration:none; line-height:1;">🤍</a>
+                    {% endif %}
+                </div>
+                <a href="{% url 'product_detail' product.pk %}" style="display:contents; text-decoration:none; color:inherit;">
+                    <div class="product-img-wrap">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.p_name }}">
+                        {% else %}
+                        <div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;">🏋️</div>
+                        {% endif %}
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">{{ product.category }}</div>
+                        <div class="product-name">{{ product.p_name }}</div>
+                        {% if product.asset_id %}
+                        <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px;">ID: {{ product.asset_id }}</div>
+                        {% endif %}
+                        <div class="product-rating"><span class="stars">★★★★★</span> (4.8)</div>
+                        <div class="product-footer">
+                            <div class="product-price">₹{{ product.price }}</div>
+                        </div>
+                    </div>
+                </a>
+                <div style="padding:0 16px 16px;margin-top:auto;">
+                    <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;">🛒 Add to Cart</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="text-align:center;padding:80px;color:var(--text-muted);">
+            <div style="font-size:4rem;margin-bottom:16px;">🔍</div>
+            <h2>No products found</h2>
+            <p>Try a different search or category.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

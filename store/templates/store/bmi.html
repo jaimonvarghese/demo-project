@@ -1,0 +1,46 @@
+{% extends 'store/base.html' %}
+{% block title %}BMI Calculator – VigorCart{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="container" style="max-width:600px;">
+        <div class="section-header">
+            <div class="section-tag">Free Tool</div>
+            <h1 class="section-title">BMI Calculator</h1>
+            <p class="section-subtitle">Enter your weight and height to calculate your Body Mass Index.</p>
+        </div>
+        <div class="auth-card" style="max-width:100%;">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="form-label">Weight (kg)</label>
+                    <input type="number" name="weight" class="form-input" placeholder="e.g. 70" step="0.1" min="1"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Height (cm)</label>
+                    <input type="number" name="height" class="form-input" placeholder="e.g. 175" step="0.1" min="1"
+                        required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Calculate
+                    BMI</button>
+            </form>
+
+            {% if result %}
+            <div
+                style="margin-top:32px;text-align:center;padding:28px;background:var(--bg-elevated);border-radius:var(--radius);border:1px solid
+        {% if category.1 == 'success' %}rgba(0,230,118,0.4){% elif category.1 == 'info' %}rgba(100,181,246,0.4){% elif category.1 == 'warning' %}rgba(255,171,64,0.4){% else %}rgba(255,77,77,0.4){% endif %};">
+                <div
+                    style="font-size:3.5rem;font-weight:800;
+          color:{% if category.1 == 'success' %}var(--primary){% elif category.1 == 'info' %}#64b5f6{% elif category.1 == 'warning' %}#ffab40{% else %}var(--danger){% endif %};">
+                    {{ result }}
+                </div>
+                <div style="font-size:1.1rem;font-weight:700;margin-top:8px;">{{ category.0 }}</div>
+                <div style="color:var(--text-secondary);font-size:0.88rem;margin-top:10px;">
+                    BMI Categories: Underweight &lt;18.5 · Normal 18.5–24.9 · Overweight 25–29.9 · Obese ≥30
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

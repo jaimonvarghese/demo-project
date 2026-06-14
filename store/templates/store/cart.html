@@ -1,0 +1,71 @@
+{% extends 'store/base.html' %}
+{% block title %}My Cart – VigorCart{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="container" style="max-width:900px;">
+        <div class="section-header" style="text-align:left;margin-bottom:32px;">
+            <h1 class="section-title">Shopping Cart</h1>
+        </div>
+
+        {% if cart.items.exists %}
+        <div style="display:grid;grid-template-columns:1fr 320px;gap:32px;align-items:start;">
+            <div style="display:flex;flex-direction:column;gap:16px;">
+                {% for item in cart.items.all %}
+                <div
+                    style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;align-items:center;gap:20px;">
+                    <div
+                        style="width:100px;height:100px;background:var(--bg-elevated);border-radius:8px;overflow:hidden;flex-shrink:0;">
+                        {% if item.product.image %}<img src="{{ item.product.image.url }}"
+                            style="width:100%;height:100%;object-fit:cover;">
+                        {% else %}<div
+                            style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem;">
+                            🏋️</div>{% endif %}
+                    </div>
+                    <div style="flex-grow:1;">
+                        <div style="font-size:1.1rem;font-weight:700;margin-bottom:4px;">{{ item.product.p_name }}</div>
+                        <div style="color:var(--text-muted);font-size:0.85rem;margin-bottom:8px;">Price: ₹{{ item.product.price }}</div>
+                        <div style="display:flex;align-items:center;gap:16px;">
+                            <div style="font-size:0.9rem;">Qty: <strong>{{ item.quantity }}</strong></div>
+                            <a href="{% url 'remove_from_cart' item.id %}"
+                                style="color:var(--danger);font-size:0.85rem;font-weight:600;">Remove</a>
+                        </div>
+                    </div>
+                    <div style="font-size:1.2rem;font-weight:800;color:var(--primary);flex-shrink:0;">₹{{ item.subtotal }}</div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div
+                style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;position:sticky;top:100px;">
+                <h3
+                    style="font-size:1.2rem;font-weight:800;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);">
+                    Order Summary</h3>
+                <div style="display:flex;justify-content:space-between;margin-bottom:12px;color:var(--text-secondary);">
+                    <span>Subtotal</span><span>₹{{ cart.total_price }}</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:12px;color:var(--text-secondary);">
+                    <span>Shipping</span><span style="color:var(--primary);">FREE</span>
+                </div>
+                <div
+                    style="display:flex;justify-content:space-between;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);font-size:1.3rem;font-weight:800;">
+                    <span>Total</span><span>₹{{ cart.total_price }}</span>
+                </div>
+                <a href="{% url 'checkout' %}" class="btn btn-primary btn-lg"
+                    style="width:100%;margin-top:24px;justify-content:center;">Proceed to Checkout →</a>
+                <a href="{% url 'products' %}"
+                    style="display:block;text-align:center;margin-top:16px;font-size:0.85rem;color:var(--text-muted);">Continue
+                    Shopping</a>
+            </div>
+        </div>
+        {% else %}
+        <div style="text-align:center;padding:100px 24px;">
+            <div style="font-size:5rem;margin-bottom:24px;opacity:0.3;">🛒</div>
+            <h2 style="font-size:1.8rem;margin-bottom:12px;">Your cart is empty</h2>
+            <p style="color:var(--text-muted);margin-bottom:32px;">Looks like you haven't added anything to your cart
+                yet.</p>
+            <a href="{% url 'products' %}" class="btn btn-primary btn-lg">Browse Products</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

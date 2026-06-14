@@ -1,0 +1,56 @@
+{% extends 'store/base.html' %}
+{% block title %}{{ action }} – Partner Portal{% endblock %}
+{% block content %}
+<div class="auth-page">
+    <div class="auth-card" style="max-width: 500px;">
+        <div style="text-align:center;margin-bottom:32px;">
+            <div style="font-size:3rem;margin-bottom:12px;">🤝</div>
+            <h1 class="auth-title">Partner Portal</h1>
+            <p class="auth-subtitle">Welcome to the VigorCart professional network.</p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            {% if action == 'Register' %}
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-input" placeholder="p_username" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-input" placeholder="partner@email.com" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Account Role</label>
+                <select name="role" class="form-input" required>
+                    <option value="shop_owner">Shop Owner / Vendor</option>
+                </select>
+            </div>
+            {% else %}
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-input" placeholder="username" required>
+            </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-input" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary"
+                style="width:100%;justify-content:center;height:52px;font-size:1.1rem;margin-top:12px;">
+                {{ action }} to Portal →
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            {% if action == 'Register' %}
+            Already a partner? <a href="{% url 'partner_login' %}">Login here</a>
+            {% else %}
+            New to VigorCart? <a href="{% url 'partner_register' %}">Register as Partner</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
