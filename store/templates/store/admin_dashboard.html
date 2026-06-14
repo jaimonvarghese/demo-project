@@ -44,33 +44,64 @@
         </div>
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;">
-            <!-- Shop Approvals -->
-            <div>
-                <h2
-                    style="font-size:1.2rem;font-weight:800;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
-                    🏪 Pending Verification {% if pending_shops %}<span
-                        style="background:var(--danger);color:#fff;font-size:0.7rem;padding:2px 8px;border-radius:50px;">{{ pending_shops.count }}</span>{% endif %}
-                </h2>
-                {% if pending_shops %}
-                <div style="display:flex;flex-direction:column;gap:12px;">
-                    {% for shop in pending_shops %}
-                    <div
-                        style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;justify-content:space-between;align-items:center;">
-                        <div>
-                            <div style="font-weight:700;">{{ shop.name }}</div>
-                            <div style="font-size:0.8rem;color:var(--text-secondary);">Owner: {{ shop.owner.username }}
-                                | {{ shop.location }}</div>
+            <!-- Left Column: Approvals & Reset Requests -->
+            <div style="display:flex;flex-direction:column;gap:32px;">
+                <!-- Shop Approvals -->
+                <div>
+                    <h2
+                        style="font-size:1.2rem;font-weight:800;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+                        🏪 Pending Verification {% if pending_shops %}<span
+                            style="background:var(--danger);color:#fff;font-size:0.7rem;padding:2px 8px;border-radius:50px;">{{ pending_shops.count }}</span>{% endif %}
+                    </h2>
+                    {% if pending_shops %}
+                    <div style="display:flex;flex-direction:column;gap:12px;">
+                        {% for shop in pending_shops %}
+                        <div
+                            style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;justify-content:space-between;align-items:center;">
+                            <div>
+                                <div style="font-weight:700;">{{ shop.name }}</div>
+                                <div style="font-size:0.8rem;color:var(--text-secondary);">Owner: {{ shop.owner.username }}
+                                    | {{ shop.location }}</div>
+                            </div>
+                            <a href="{% url 'verify_shop' shop.id %}" class="btn btn-primary btn-sm">Verify Shop</a>
                         </div>
-                        <a href="{% url 'verify_shop' shop.id %}" class="btn btn-primary btn-sm">Verify Shop</a>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
+                    {% else %}
+                    <div
+                        style="padding:40px;text-align:center;background:var(--bg-card);border:1px dashed var(--border);border-radius:var(--radius);color:var(--text-muted);">
+                        All shops are verified.
+                    </div>
+                    {% endif %}
                 </div>
-                {% else %}
-                <div
-                    style="padding:40px;text-align:center;background:var(--bg-card);border:1px dashed var(--border);border-radius:var(--radius);color:var(--text-muted);">
-                    All shops are verified.
+
+                <!-- Password Reset Requests -->
+                <div>
+                    <h2
+                        style="font-size:1.2rem;font-weight:800;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+                        🔑 Pending Password Resets {% if pending_resets %}<span
+                            style="background:var(--danger);color:#fff;font-size:0.7rem;padding:2px 8px;border-radius:50px;">{{ pending_resets.count }}</span>{% endif %}
+                    </h2>
+                    {% if pending_resets %}
+                    <div style="display:flex;flex-direction:column;gap:12px;">
+                        {% for req in pending_resets %}
+                        <div
+                            style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;justify-content:space-between;align-items:center;">
+                            <div>
+                                <div style="font-weight:700;">{{ req.user.username }}</div>
+                                <div style="font-size:0.8rem;color:var(--text-secondary);">Email: {{ req.user.email }} | Role: {{ req.user.get_role_display }}</div>
+                            </div>
+                            <a href="{% url 'admin_reset_password' req.user.id %}" class="btn btn-primary btn-sm">Reset Password</a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div
+                        style="padding:40px;text-align:center;background:var(--bg-card);border:1px dashed var(--border);border-radius:var(--radius);color:var(--text-muted);">
+                        No pending reset requests.
+                    </div>
+                    {% endif %}
                 </div>
-                {% endif %}
             </div>
 
             <!-- Recent Site Activity -->

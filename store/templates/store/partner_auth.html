@@ -44,11 +44,12 @@
             </button>
         </form>
 
-        <div class="auth-footer">
+        <div class="auth-footer" style="display:flex;flex-direction:column;gap:8px;align-items:center;margin-top:20px;">
             {% if action == 'Register' %}
-            Already a partner? <a href="{% url 'partner_login' %}">Login here</a>
+            <div>Already a partner? <a href="{% url 'partner_login' %}">Login here</a></div>
             {% else %}
-            New to VigorCart? <a href="{% url 'partner_register' %}">Register as Partner</a>
+            <div>New to VigorCart? <a href="{% url 'partner_register' %}">Register as Partner</a></div>
+            <div><a href="{% url 'forgot_password' %}" style="color:var(--text-muted);font-size:0.85rem;text-decoration:underline;">Forgot Password?</a></div>
             {% endif %}
         </div>
     </div>

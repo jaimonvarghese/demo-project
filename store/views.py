@@ -203,6 +203,75 @@ def logout_view(request):
     return redirect('home')
 
 
+def forgot_password(request):
+    """Step 1: User enters their email to request a reset link or request admin reset."""
+    from .models import PasswordResetToken, AdminPasswordResetRequest
+    import uuid as _uuid
+
+    reset_link = None
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip()
+        action = request.POST.get('action', 'generate_link')
+        try:
+            user = User.objects.get(email=email)
+            if action == 'request_admin':
+                # Check if a pending request already exists
+                if AdminPasswordResetRequest.objects.filter(user=user, is_completed=False).exists():
+                    messages.info(request, 'A password reset request is already pending with the admin.')
+                else:
+                    AdminPasswordResetRequest.objects.create(user=user)
+                    messages.success(request, 'Your request has been submitted to the admin. Please contact the administrator to reset your password.')
+            else:
+                # Invalidate any old unused tokens for this user
+                PasswordResetToken.objects.filter(user=user, is_used=False).delete()
+                # Generate a fresh token
+                token = _uuid.uuid4().hex
+                PasswordResetToken.objects.create(user=user, token=token)
+                reset_link = request.build_absolute_uri(f'/reset-password/{token}/')
+                messages.success(request, 'A password reset link has been generated. Copy the link below.')
+        except User.DoesNotExist:
+            messages.error(request, 'No account found with that email address.')
+
+    return render(request, 'store/forgot_password.html', {'reset_link': reset_link})
+
+
+
+def reset_password_confirm(request, token):
+    """Step 2: User clicks the link and sets a new password."""
+    from .models import PasswordResetToken
+    from django.utils import timezone
+    from datetime import timedelta
+
+    try:
+        reset_obj = PasswordResetToken.objects.get(token=token, is_used=False)
+    except PasswordResetToken.DoesNotExist:
+        messages.error(request, 'This reset link is invalid or has already been used.')
+        return redirect('forgot_password')
+
+    # Token expires after 1 hour
+    if timezone.now() > reset_obj.created_at + timedelta(hours=1):
+        reset_obj.delete()
+        messages.error(request, 'This reset link has expired. Please request a new one.')
+        return redirect('forgot_password')
+
+    if request.method == 'POST':
+        password = request.POST.get('password', '')
+        confirm = request.POST.get('confirm_password', '')
+        if len(password) < 8:
+            messages.error(request, 'Password must be at least 8 characters.')
+        elif password != confirm:
+            messages.error(request, 'Passwords do not match.')
+        else:
+            reset_obj.user.set_password(password)
+            reset_obj.user.save()
+            reset_obj.is_used = True
+            reset_obj.save()
+            messages.success(request, 'Your password has been reset successfully! Please log in.')
+            return redirect('login')
+
+    return render(request, 'store/reset_password_confirm.html', {'token': token})
+
+
 def profile(request):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -697,6 +766,10 @@ def admin_dashboard(request):
     # Recent Shops awaiting verification
     pending_shops = Shop.objects.filter(is_verified=False).order_by('-id')
     
+    # Recent password reset requests
+    from .models import AdminPasswordResetRequest
+    pending_resets = AdminPasswordResetRequest.objects.filter(is_completed=False).order_by('-id')
+    
     # Recent Orders
     recent_orders = Order.objects.all().order_by('-created_at')[:10]
     
@@ -706,8 +779,10 @@ def admin_dashboard(request):
         'total_users': total_users,
         'total_shops': total_shops,
         'pending_shops': pending_shops,
+        'pending_resets': pending_resets,
         'recent_orders': recent_orders,
     })
+
 
 @staff_member_required
 def verify_shop(request, shop_id):
@@ -758,7 +833,31 @@ def delete_shop(request, shop_id):
     return redirect('admin_shops')
 
 
+@staff_member_required
+def admin_reset_password(request, user_id):
+    from .models import User, AdminPasswordResetRequest
+    user_to_reset = get_object_or_404(User, id=user_id)
+    
+    if request.method == 'POST':
+        password = request.POST.get('password', '')
+        confirm = request.POST.get('confirm_password', '')
+        if len(password) < 8:
+            messages.error(request, 'Password must be at least 8 characters.')
+        elif password != confirm:
+            messages.error(request, 'Passwords do not match.')
+        else:
+            user_to_reset.set_password(password)
+            user_to_reset.save()
+            # Mark all pending reset requests for this user as completed
+            AdminPasswordResetRequest.objects.filter(user=user_to_reset, is_completed=False).update(is_completed=True)
+            messages.success(request, f"Password for user '{user_to_reset.username}' has been reset successfully.")
+            return redirect('admin_users')
+            
+    return render(request, 'store/admin_reset_password.html', {'user_to_reset': user_to_reset})
+
+
 def shop_detail(request, pk):
+
     shop = get_object_or_404(Shop, pk=pk)
     products = Product.objects.filter(shop=shop)
     return render(request, 'store/shop_detail.html', {

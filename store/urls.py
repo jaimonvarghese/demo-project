@@ -21,6 +21,8 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
+    path('forgot-password/', views.forgot_password, name='forgot_password'),
+    path('reset-password/<str:token>/', views.reset_password_confirm, name='reset_password_confirm'),
     
     # Shop Owner Routes
     path('shop/register/', views.shop_register, name='shop_register'),
@@ -39,6 +41,7 @@ urlpatterns = [
     path('admin-dashboard/users/', views.admin_users, name='admin_users'),
     path('admin-dashboard/shops/', views.admin_shops, name='admin_shops'),
     path('admin-dashboard/users/delete/<int:user_id>/', views.delete_user, name='delete_user'),
+    path('admin-dashboard/users/reset-password/<int:user_id>/', views.admin_reset_password, name='admin_reset_password'),
     path('admin-dashboard/shops/delete/<int:shop_id>/', views.delete_shop, name='delete_shop'),
     
     path('shop/<int:pk>/', views.shop_detail, name='shop_detail'),

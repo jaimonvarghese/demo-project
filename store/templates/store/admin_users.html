@@ -72,11 +72,12 @@
                             <td style="padding:16px 20px;text-align:right;color:var(--text-muted);font-size:0.82rem;">
                                 {{ u.date_joined|date:"d M Y" }}
                             </td>
-                            <td style="padding:16px 20px;text-align:right;">
+                            <td style="padding:16px 20px;text-align:right;white-space:nowrap;">
                                 {% if u != request.user %}
+                                <a href="{% url 'admin_reset_password' u.id %}" class="btn btn-sm btn-outline" style="padding:4px 12px; border-radius:50px; font-size:0.82rem; margin-right:8px; border-color:var(--primary); color:var(--primary); text-decoration:none; display:inline-block;">Reset PW</a>
                                 <form method="POST" action="{% url 'delete_user' u.id %}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete user {{ u.username }}? This action is permanent and will cascade-delete all of their shops, products, cart items, orders, wishlist entries, and reviews.')">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-sm" style="background:rgba(255,77,77,0.1); color:var(--danger); border:1px solid rgba(255,77,77,0.3); padding:4px 12px; border-radius:50px;">Delete</button>
+                                    <button type="submit" class="btn btn-sm" style="background:rgba(255,77,77,0.1); color:var(--danger); border:1px solid rgba(255,77,77,0.3); padding:4px 12px; border-radius:50px; cursor:pointer;">Delete</button>
                                 </form>
                                 {% else %}
                                 <span style="font-size:0.82rem;color:var(--text-muted);font-style:italic;">You</span>
